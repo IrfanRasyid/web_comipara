@@ -40,7 +40,7 @@ export const Home = () => {
       {/* Hero Section */}
       <section className="relative h-[80vh] flex items-center overflow-hidden">
         <div className="absolute inset-0 z-0 flex">
-          {profiles.slice(0, 4).map((p, idx) => (
+          {profiles.slice(0, 4).map((p) => (
              <img
                key={p.id}
                src={p.avatar_url || 'https://images.unsplash.com/photo-1613310023042-ad79bb239d29?auto=format&fit=crop&q=80&w=2000'}

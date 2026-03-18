@@ -1,7 +1,6 @@
 import { useStore } from '../store/useStore';
 import { useMemo, useState } from 'react';
 import { Play, User } from 'lucide-react';
-import { Link } from 'react-router-dom';
 
 export const Content = () => {
   const { profiles, videos, isLoading } = useStore();

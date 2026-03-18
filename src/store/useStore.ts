@@ -37,9 +37,10 @@ export const useStore = create<AppState>((set) => ({
         schedules: scheduleRes.data || [],
         videos: videoRes.data || [],
       });
-    } catch (error: any) {
+    } catch (error) {
       console.error('Error fetching data:', error);
-      set({ error: error.message });
+      const message = error instanceof Error ? error.message : String(error);
+      set({ error: message });
     } finally {
       set({ isLoading: false });
     }
