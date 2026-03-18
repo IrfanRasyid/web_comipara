@@ -92,7 +92,7 @@ export const Home = () => {
       {highlightMerch.length > 0 && (
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
           <div className="flex items-center justify-between mb-8">
-            <h2 className="text-3xl font-bold">Highlight <span className="text-pink-500">Merch</span></h2>
+            <h2 className="text-3xl font-bold">Our <span className="text-pink-500">Merchandise</span></h2>
             <Link
               to="/merchandise"
               className="inline-flex items-center px-4 py-2 rounded-full bg-zinc-800 hover:bg-zinc-700 text-white font-medium transition-colors border border-zinc-700"
