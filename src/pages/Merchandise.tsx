@@ -26,6 +26,12 @@ const normalizeImageUrls = (value: unknown): string[] => {
 export const Merchandise = () => {
   const { merchandise, profiles, isLoading } = useStore();
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [memberId, setMemberId] = useState<string | 'all'>('all');
+
+  const filteredMerchandise = useMemo(() => {
+    if (memberId === 'all') return merchandise;
+    return merchandise.filter((m) => m.vtuber_id === memberId);
+  }, [merchandise, memberId]);
 
   const selectedItem = useMemo(
     () => merchandise.find((m) => m.id === selectedId) ?? null,
@@ -45,6 +51,10 @@ export const Merchandise = () => {
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
   }, [selectedItem]);
+
+  useEffect(() => {
+    setSelectedId(null);
+  }, [memberId]);
 
   if (isLoading) {
     return (
@@ -67,15 +77,42 @@ export const Merchandise = () => {
         </p>
       </div>
 
-      {merchandise.length === 0 ? (
+      <div className="flex gap-3 overflow-x-auto pb-4 mb-8">
+        <button
+          onClick={() => setMemberId('all')}
+          className={`px-4 py-2 rounded-full text-sm font-medium border transition-colors ${
+            memberId === 'all'
+              ? 'bg-pink-500/10 text-pink-500 border-pink-500/40'
+              : 'bg-zinc-900 text-zinc-300 border-zinc-800 hover:bg-zinc-800'
+          }`}
+        >
+          Semua
+        </button>
+        {profiles.map((p) => (
+          <button
+            key={p.id}
+            onClick={() => setMemberId(p.id)}
+            className={`px-4 py-2 rounded-full text-sm font-medium border transition-colors whitespace-nowrap ${
+              memberId === p.id
+                ? 'bg-pink-500/10 text-pink-500 border-pink-500/40'
+                : 'bg-zinc-900 text-zinc-300 border-zinc-800 hover:bg-zinc-800'
+            }`}
+            title={p.name}
+          >
+            {p.name}
+          </button>
+        ))}
+      </div>
+
+      {filteredMerchandise.length === 0 ? (
         <div className="text-center py-20 bg-zinc-900/50 rounded-2xl border border-zinc-800">
           <ShoppingCart className="w-16 h-16 text-zinc-600 mx-auto mb-4" />
-          <h3 className="text-xl font-medium text-zinc-300">No merchandise available right now</h3>
-          <p className="text-zinc-500 mt-2">Check back later for new drops!</p>
+          <h3 className="text-xl font-medium text-zinc-300">Tidak ada merchandise untuk filter ini</h3>
+          <p className="text-zinc-500 mt-2">Coba pilih member lain atau kembali ke Semua.</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-          {merchandise.map((item) => {
+          {filteredMerchandise.map((item) => {
             const vtuber = profiles.find(p => p.id === item.vtuber_id);
             const imageUrls = normalizeImageUrls(item.images_url);
             const imageUrl = imageUrls[0] || 'https://images.unsplash.com/photo-1560393464-5c69a73c5770?auto=format&fit=crop&q=80&w=800';
