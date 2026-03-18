@@ -27,6 +27,8 @@ export interface Merchandise {
   is_available: boolean;
   order_url?: string;
   created_at: string;
+  updated_at?: string;
+  currency?: string;
 }
 
 export interface StreamingSchedule {
