@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { Play, ShoppingBag, Users, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useStore } from '../store/useStore';
@@ -15,6 +15,11 @@ const firstMerchImageUrl = (value: unknown): string | null => {
 export const Home = () => {
   const { profiles, videos, merchandise, isLoading, fetchData } = useStore();
   const [currentIndex, setCurrentIndex] = useState(0);
+
+  const randomizedProfiles = useMemo(() => {
+    if (!profiles || profiles.length === 0) return [];
+    return [...profiles].sort(() => Math.random() - 0.5).slice(0, 4);
+  }, [profiles]);
 
   const getYoutubeThumbnailUrl = (url?: string) => {
     if (!url) return null;
@@ -63,15 +68,21 @@ export const Home = () => {
       {/* Hero Section */}
       <section className="relative h-[80vh] flex items-center overflow-hidden">
         <div className="absolute inset-0 z-0 flex">
-          {profiles.slice(0, 4).map((p) => (
-             <img
-               key={p.id}
-               src={p.avatar_url || 'https://images.unsplash.com/photo-1613310023042-ad79bb239d29?auto=format&fit=crop&q=80&w=2000'}
-               alt={p.name}
-               className="w-1/4 h-full object-cover opacity-70"
-             />
+          {randomizedProfiles.map((p) => (
+             <div key={p.id} className="w-1/4 h-full relative overflow-hidden group/hero">
+               <img
+                 src={p.avatar_url || 'https://images.unsplash.com/photo-1613310023042-ad79bb239d29?auto=format&fit=crop&q=80&w=2000'}
+                 alt={p.name}
+                 className="w-full h-full object-cover opacity-70 group-hover/hero:opacity-100 group-hover/hero:scale-110 transition-all duration-700 ease-out grayscale-[20%] group-hover/hero:grayscale-0"
+               />
+               <Link 
+                 to={`/profile/${p.id}`}
+                 className="absolute inset-0 z-10"
+                 title={`View ${p.name}'s Profile`}
+               />
+             </div>
           ))}
-          <div className="absolute inset-0 bg-gradient-to-b from-zinc-950/20 via-zinc-950/50 to-zinc-950/80"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-zinc-950/20 via-zinc-950/50 to-zinc-950/80 pointer-events-none"></div>
         </div>
         
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
