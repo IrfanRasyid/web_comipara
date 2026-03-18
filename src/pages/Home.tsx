@@ -3,8 +3,17 @@ import { Link } from 'react-router-dom';
 import { Play, ShoppingBag, Users, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useStore } from '../store/useStore';
 
+const firstMerchImageUrl = (value: unknown): string | null => {
+  if (Array.isArray(value)) {
+    const url = value.find((v): v is string => typeof v === 'string' && v.length > 0);
+    return url ?? null;
+  }
+  if (typeof value === 'string' && value.length > 0) return value;
+  return null;
+};
+
 export const Home = () => {
-  const { profiles, videos, isLoading, fetchData } = useStore();
+  const { profiles, videos, merchandise, isLoading, fetchData } = useStore();
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
@@ -34,6 +43,7 @@ export const Home = () => {
   }
 
   const latestVideo = videos[currentIndex];
+  const highlightMerch = merchandise.slice(0, 4);
 
   return (
     <div className="flex flex-col gap-16 pb-16">
@@ -78,6 +88,84 @@ export const Home = () => {
           </div>
         </div>
       </section>
+
+      {highlightMerch.length > 0 && (
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+          <div className="flex items-center justify-between mb-8">
+            <h2 className="text-3xl font-bold">Highlight <span className="text-pink-500">Merch</span></h2>
+            <Link
+              to="/merchandise"
+              className="inline-flex items-center px-4 py-2 rounded-full bg-zinc-800 hover:bg-zinc-700 text-white font-medium transition-colors border border-zinc-700"
+            >
+              <ShoppingBag className="w-4 h-4 mr-2" />
+              Lihat semua
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {highlightMerch.map((item) => {
+              const vtuber = profiles.find((p) => p.id === item.vtuber_id);
+              const imageUrl =
+                firstMerchImageUrl(item.images_url) ||
+                'https://images.unsplash.com/photo-1560393464-5c69a73c5770?auto=format&fit=crop&q=80&w=800';
+
+              return (
+                <div
+                  key={item.id}
+                  className="bg-zinc-900 rounded-2xl overflow-hidden border border-zinc-800 hover:border-pink-500/50 transition-colors flex flex-col"
+                >
+                  <div className="aspect-square overflow-hidden bg-zinc-950">
+                    <img
+                      src={imageUrl}
+                      alt={item.name}
+                      className="w-full h-full object-cover"
+                      loading="lazy"
+                    />
+                  </div>
+
+                  <div className="p-5 flex flex-col flex-grow">
+                    <div className="text-white font-bold line-clamp-1" title={item.name}>
+                      {item.name}
+                    </div>
+                    {vtuber && (
+                      <div className="mt-2 text-xs text-zinc-400 line-clamp-1" title={vtuber.name}>
+                        {vtuber.name}
+                      </div>
+                    )}
+
+                    <div className="mt-auto pt-4 flex items-center justify-between border-t border-zinc-800/50">
+                      <div className="text-lg font-extrabold text-white">
+                        Rp {item.price.toLocaleString('id-ID')}
+                      </div>
+                      {item.order_url ? (
+                        <a
+                          href={item.order_url}
+                          target="_blank"
+                          rel="noreferrer"
+                          className={`px-3 py-2 rounded-xl text-sm font-medium transition-colors ${
+                            item.is_available
+                              ? 'bg-pink-500 hover:bg-pink-600 text-white'
+                              : 'bg-zinc-800 text-zinc-500 pointer-events-none'
+                          }`}
+                        >
+                          Order
+                        </a>
+                      ) : (
+                        <Link
+                          to="/merchandise"
+                          className="px-3 py-2 rounded-xl text-sm font-medium bg-zinc-800 hover:bg-zinc-700 text-white transition-colors"
+                        >
+                          Detail
+                        </Link>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+      )}
 
       {/* Latest Video Section */}
       {latestVideo && (
