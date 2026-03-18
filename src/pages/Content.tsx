@@ -6,6 +6,19 @@ export const Content = () => {
   const { profiles, videos, isLoading } = useStore();
   const [memberId, setMemberId] = useState<string | 'all'>('all');
 
+  const getYoutubeThumbnailUrl = (url?: string) => {
+    if (!url) return null;
+    let videoId = '';
+    if (url.includes('youtube.com/watch?v=')) {
+      videoId = url.split('v=')[1].split('&')[0];
+    } else if (url.includes('youtu.be/')) {
+      videoId = url.split('youtu.be/')[1].split('?')[0];
+    } else if (url.includes('youtube.com/embed/')) {
+      videoId = url.split('embed/')[1].split('?')[0];
+    }
+    return videoId ? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg` : null;
+  };
+
   const filteredVideos = useMemo(() => {
     if (memberId === 'all') return videos;
     return videos.filter(v => v.vtuber_id === memberId);
@@ -68,13 +81,22 @@ export const Content = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {filteredVideos.map((video) => {
             const vtuber = profiles.find(p => p.id === video.vtuber_id);
+            const youtubeThumb = getYoutubeThumbnailUrl(video.video_url);
+            const thumbnailSrc = youtubeThumb || video.thumbnail_url;
+            
             return (
-              <div key={video.id} className="group rounded-2xl overflow-hidden bg-zinc-900 border border-zinc-800 hover:border-pink-500/50 transition-all">
-                <div className="relative aspect-video bg-zinc-900">
+              <div key={video.id} className="group rounded-2xl overflow-hidden bg-zinc-900 border border-zinc-800 hover:border-pink-500/50 transition-all shadow-lg hover:shadow-pink-500/10">
+                <div className="relative aspect-video bg-zinc-950">
                   <img
-                    src={video.thumbnail_url}
+                    src={thumbnailSrc}
                     alt={video.title}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 opacity-90 group-hover:opacity-100"
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 opacity-80 group-hover:opacity-100"
+                    onError={(e) => {
+                      // Fallback to hqdefault if maxresdefault is not available
+                      if (youtubeThumb && e.currentTarget.src.includes('maxresdefault.jpg')) {
+                        e.currentTarget.src = e.currentTarget.src.replace('maxresdefault.jpg', 'hqdefault.jpg');
+                      }
+                    }}
                   />
                   <a
                     href={video.video_url}

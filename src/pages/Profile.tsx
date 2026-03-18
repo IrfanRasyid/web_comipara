@@ -1,5 +1,6 @@
 import { useStore } from '../store/useStore';
-import { Youtube, Twitter, Instagram } from 'lucide-react';
+import { Youtube, Twitter, Instagram, ChevronRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 export const Profile = () => {
   const { profiles } = useStore();
@@ -15,25 +16,27 @@ export const Profile = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
         {profiles.map((profile) => (
-          <div key={profile.id} className="bg-zinc-900/50 rounded-3xl overflow-hidden border border-zinc-800 flex flex-col hover:border-pink-500/50 transition-colors duration-300">
-            <div className="aspect-square relative">
+          <div key={profile.id} className="group bg-zinc-900/50 rounded-3xl overflow-hidden border border-zinc-800 flex flex-col hover:border-pink-500/50 transition-all duration-300 hover:shadow-2xl hover:shadow-pink-500/10">
+            <Link to={`/profile/${profile.id}`} className="block relative aspect-square overflow-hidden">
               <img
                 src={profile.avatar_url}
                 alt={profile.name}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-zinc-900 to-transparent"></div>
-            </div>
+              <div className="absolute inset-0 bg-gradient-to-t from-zinc-900 via-transparent to-transparent opacity-60"></div>
+            </Link>
             
-            <div className="p-8 flex flex-col flex-grow -mt-20 relative z-10">
-              <h2 className="text-3xl font-bold text-white mb-1">{profile.name}</h2>
-              <p className="text-pink-500 font-medium mb-4">{profile.persona}</p>
+            <div className="p-8 flex flex-col flex-grow -mt-20 relative z-10 pointer-events-none">
+              <Link to={`/profile/${profile.id}`} className="pointer-events-auto">
+                <h2 className="text-3xl font-bold text-white mb-1 group-hover:text-pink-500 transition-colors">{profile.name}</h2>
+                <p className="text-pink-500 font-medium mb-4">{profile.persona}</p>
+                
+                <p className="text-zinc-300 mb-6 flex-grow line-clamp-3">
+                  {profile.description}
+                </p>
+              </Link>
               
-              <p className="text-zinc-300 mb-6 flex-grow">
-                {profile.description}
-              </p>
-              
-              <div className="bg-zinc-950 rounded-xl p-4 mb-6">
+              <div className="bg-zinc-950 rounded-xl p-4 mb-6 pointer-events-auto">
                 <p className="text-sm text-zinc-500 uppercase tracking-wider mb-1">Debut Date</p>
                 <p className="text-white font-medium">
                   {new Date(profile.debut_date).toLocaleDateString(undefined, { 
@@ -44,37 +47,46 @@ export const Profile = () => {
                 </p>
               </div>
 
-              <div className="flex space-x-3 mt-auto">
-                {profile.social_links?.youtube && (
-                  <a
-                    href={profile.social_links.youtube}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="p-3 bg-zinc-800 hover:bg-pink-500 hover:text-white rounded-xl transition-all"
-                  >
-                    <Youtube className="w-5 h-5" />
-                  </a>
-                )}
-                {profile.social_links?.twitter && (
-                  <a
-                    href={profile.social_links.twitter}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="p-3 bg-zinc-800 hover:bg-blue-400 hover:text-white rounded-xl transition-all"
-                  >
-                    <Twitter className="w-5 h-5" />
-                  </a>
-                )}
-                {profile.social_links?.instagram && (
-                  <a
-                    href={profile.social_links.instagram}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="p-3 bg-zinc-800 hover:bg-gradient-to-tr hover:from-yellow-400 hover:via-pink-500 hover:to-purple-500 hover:text-white rounded-xl transition-all"
-                  >
-                    <Instagram className="w-5 h-5" />
-                  </a>
-                )}
+              <div className="flex items-center justify-between mt-auto pointer-events-auto">
+                <div className="flex space-x-3">
+                  {profile.social_links?.youtube && (
+                    <a
+                      href={profile.social_links.youtube}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="p-3 bg-zinc-800 hover:bg-pink-500 hover:text-white rounded-xl transition-all"
+                    >
+                      <Youtube className="w-5 h-5" />
+                    </a>
+                  )}
+                  {profile.social_links?.twitter && (
+                    <a
+                      href={profile.social_links.twitter}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="p-3 bg-zinc-800 hover:bg-blue-400 hover:text-white rounded-xl transition-all"
+                    >
+                      <Twitter className="w-5 h-5" />
+                    </a>
+                  )}
+                  {profile.social_links?.instagram && (
+                    <a
+                      href={profile.social_links.instagram}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="p-3 bg-zinc-800 hover:bg-gradient-to-tr hover:from-yellow-400 hover:via-pink-500 hover:to-purple-500 hover:text-white rounded-xl transition-all"
+                    >
+                      <Instagram className="w-5 h-5" />
+                    </a>
+                  )}
+                </div>
+                
+                <Link 
+                  to={`/profile/${profile.id}`}
+                  className="text-pink-500 hover:text-pink-400 font-bold flex items-center gap-1 group/btn"
+                >
+                  Detail <ChevronRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
+                </Link>
               </div>
             </div>
           </div>

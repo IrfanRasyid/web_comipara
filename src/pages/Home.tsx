@@ -16,6 +16,19 @@ export const Home = () => {
   const { profiles, videos, merchandise, isLoading, fetchData } = useStore();
   const [currentIndex, setCurrentIndex] = useState(0);
 
+  const getYoutubeThumbnailUrl = (url?: string) => {
+    if (!url) return null;
+    let videoId = '';
+    if (url.includes('youtube.com/watch?v=')) {
+      videoId = url.split('v=')[1].split('&')[0];
+    } else if (url.includes('youtu.be/')) {
+      videoId = url.split('youtu.be/')[1].split('?')[0];
+    } else if (url.includes('youtube.com/embed/')) {
+      videoId = url.split('embed/')[1].split('?')[0];
+    }
+    return videoId ? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg` : null;
+  };
+
   useEffect(() => {
     fetchData();
   }, [fetchData]);
@@ -55,10 +68,10 @@ export const Home = () => {
                key={p.id}
                src={p.avatar_url || 'https://images.unsplash.com/photo-1613310023042-ad79bb239d29?auto=format&fit=crop&q=80&w=2000'}
                alt={p.name}
-               className="w-1/4 h-full object-cover opacity-50"
+               className="w-1/4 h-full object-cover opacity-70"
              />
           ))}
-          <div className="absolute inset-0 bg-gradient-to-b from-zinc-950/50 via-zinc-950/80 to-zinc-950"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-zinc-950/20 via-zinc-950/50 to-zinc-950/80"></div>
         </div>
         
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
@@ -174,11 +187,17 @@ export const Home = () => {
             <h2 className="text-3xl font-bold">Latest <span className="text-pink-500">Video</span></h2>
           </div>
           
-          <div className="relative group rounded-2xl overflow-hidden aspect-video bg-zinc-900 border border-zinc-800">
+          <div className="relative group rounded-2xl overflow-hidden aspect-video bg-zinc-950 border border-zinc-800 shadow-2xl">
             <img
-              src={latestVideo.thumbnail_url}
+              src={getYoutubeThumbnailUrl(latestVideo.video_url) || latestVideo.thumbnail_url}
               alt={latestVideo.title}
               className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 opacity-80 group-hover:opacity-100"
+              onError={(e) => {
+                const youtubeThumb = getYoutubeThumbnailUrl(latestVideo.video_url);
+                if (youtubeThumb && e.currentTarget.src.includes('maxresdefault.jpg')) {
+                  e.currentTarget.src = e.currentTarget.src.replace('maxresdefault.jpg', 'hqdefault.jpg');
+                }
+              }}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-transparent to-transparent opacity-80"></div>
             <div className="absolute bottom-0 left-0 p-8">

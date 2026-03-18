@@ -8,7 +8,7 @@ export default defineConfig(() => {
   return {
     base,
     build: {
-      sourcemap: 'hidden',
+      sourcemap: 'hidden' as const,
     },
     plugins: [
       react({

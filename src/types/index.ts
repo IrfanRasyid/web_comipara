@@ -11,6 +11,9 @@ export interface VtuberProfile {
     instagram?: string;
     tiktok?: string;
   };
+  lore?: string;
+  character_sheet_url?: string;
+  youtube_video_url?: string;
   created_at: string;
   updated_at: string;
 }
