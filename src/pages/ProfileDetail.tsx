@@ -1,13 +1,40 @@
+import { useMemo } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useStore } from '../store/useStore';
-import { Youtube, Twitter, Instagram, ArrowLeft, ExternalLink, Play } from 'lucide-react';
+import { Youtube, Twitter, Instagram, ArrowLeft, ExternalLink } from 'lucide-react';
+
+const normalizeImageUrls = (value: unknown): string[] => {
+  if (Array.isArray(value)) {
+    return value.filter((v): v is string => typeof v === 'string' && v.length > 0);
+  }
+  if (typeof value === 'string' && value.length > 0) {
+    const trimmed = value.trim();
+    if ((trimmed.startsWith('[') && trimmed.endsWith(']')) || (trimmed.startsWith('{') && trimmed.endsWith('}'))) {
+      try {
+        const parsed = JSON.parse(trimmed) as unknown;
+        if (Array.isArray(parsed)) {
+          return parsed.filter((v): v is string => typeof v === 'string' && v.length > 0);
+        }
+      } catch {
+        return [value];
+      }
+    }
+    return [value];
+  }
+  return [];
+};
 
 export const ProfileDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { profiles } = useStore();
+  const { profiles, merchandise } = useStore();
   
   const profile = profiles.find((p) => p.id === id);
+
+  const highlightMerch = useMemo(() => {
+    if (!id) return [];
+    return merchandise.filter((m) => m.vtuber_id === id).slice(0, 4);
+  }, [id, merchandise]);
 
   if (!profile) {
     return (
@@ -188,6 +215,89 @@ export const ProfileDetail = () => {
               </div>
             </section>
           )}
+
+          <section>
+            <div className="flex items-center justify-between gap-4 mb-6">
+              <h2 className="text-3xl font-bold text-white flex items-center gap-3">
+                <span className="w-8 h-1 bg-pink-500 rounded-full"></span>
+                Merch Highlight
+              </h2>
+              <Link
+                to="/merchandise"
+                className="shrink-0 inline-flex items-center px-4 py-2 rounded-full bg-zinc-800 hover:bg-zinc-700 text-white font-medium transition-colors border border-zinc-700"
+              >
+                Lihat semua
+              </Link>
+            </div>
+
+            {highlightMerch.length === 0 ? (
+              <div className="bg-zinc-900/30 rounded-3xl p-8 border border-zinc-800">
+                <div className="text-white font-semibold">Belum ada merch untuk {profile.name}</div>
+                <div className="mt-2 text-zinc-400">Cek halaman merchandise untuk item terbaru.</div>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                {highlightMerch.map((item) => {
+                  const imageUrls = normalizeImageUrls(item.images_url);
+                  const imageUrl =
+                    imageUrls[0] ||
+                    'https://images.unsplash.com/photo-1560393464-5c69a73c5770?auto=format&fit=crop&q=80&w=800';
+
+                  return (
+                    <div
+                      key={item.id}
+                      className="bg-zinc-900 rounded-2xl overflow-hidden border border-pink-500/20 hover:border-pink-500/60 transition-colors flex flex-col"
+                    >
+                      <div className="aspect-square overflow-hidden bg-zinc-950">
+                        <img
+                          src={imageUrl}
+                          alt={item.name}
+                          className="w-full h-full object-cover"
+                          loading="lazy"
+                        />
+                      </div>
+
+                      <div className="p-5 flex flex-col flex-grow">
+                        <div className="text-white font-bold line-clamp-1" title={item.name}>
+                          {item.name}
+                        </div>
+                        <div className="mt-2 text-xs text-zinc-400 line-clamp-1" title={profile.name}>
+                          {profile.name}
+                        </div>
+
+                        <div className="mt-auto pt-4 flex items-center justify-between border-t border-zinc-800/50">
+                          <div className="text-lg font-extrabold text-white">
+                            Rp {item.price.toLocaleString('id-ID')}
+                          </div>
+                          {item.order_url ? (
+                            <a
+                              href={item.order_url}
+                              target="_blank"
+                              rel="noreferrer"
+                              className={`px-3 py-2 rounded-xl text-sm font-medium transition-colors ${
+                                item.is_available
+                                  ? 'bg-pink-500 hover:bg-pink-600 text-white'
+                                  : 'bg-zinc-800 text-zinc-500 pointer-events-none'
+                              }`}
+                            >
+                              Order
+                            </a>
+                          ) : (
+                            <Link
+                              to="/merchandise"
+                              className="px-3 py-2 rounded-xl text-sm font-medium bg-zinc-800 hover:bg-zinc-700 text-white transition-colors"
+                            >
+                              Detail
+                            </Link>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </section>
 
           <div className="bg-zinc-950 rounded-2xl p-6 border border-zinc-800 flex items-center justify-between">
             <div>
