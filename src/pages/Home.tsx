@@ -21,6 +21,11 @@ export const Home = () => {
     return [...profiles].sort(() => Math.random() - 0.5).slice(0, 4);
   }, [profiles]);
 
+  const highlightMerch = useMemo(() => {
+    if (!merchandise || merchandise.length === 0) return [];
+    return [...merchandise].sort(() => Math.random() - 0.5).slice(0, 4);
+  }, [merchandise]);
+
   const getYoutubeThumbnailUrl = (url?: string) => {
     if (!url) return null;
     let videoId = '';
@@ -61,7 +66,6 @@ export const Home = () => {
   }
 
   const latestVideo = videos[currentIndex];
-  const highlightMerch = merchandise.slice(0, 4);
 
   return (
     <div className="flex flex-col gap-16 pb-16">
