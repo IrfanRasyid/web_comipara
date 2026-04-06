@@ -1,14 +1,50 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
-  line-height: 1.5;
-  font-weight: 400;
+@layer base {
+  body {
+    @apply font-sans bg-manga-white text-manga-black antialiased selection:bg-manga-yellow selection:text-manga-black;
+    background-image: 
+      linear-gradient(to right, rgba(17, 17, 17, 0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(17, 17, 17, 0.05) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
 
+  body.dark {
+    @apply bg-[#141922] text-manga-white selection:bg-manga-blue selection:text-manga-white;
+    background-image: 
+      linear-gradient(to right, rgba(245, 235, 221, 0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(245, 235, 221, 0.05) 1px, transparent 1px);
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-manga tracking-wide uppercase;
+  }
+}
+
+:root {
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom neo-brutalism components */
+.neo-border {
+  @apply border-4 border-manga-black dark:border-manga-white;
+}
+
+.neo-card {
+  @apply border-4 border-manga-black dark:border-[#F5E6A8] bg-manga-white dark:bg-[#1F2937] shadow-neo dark:shadow-neo-white transition-all duration-200 hover:shadow-neo-hover dark:hover:shadow-neo-white hover:-translate-y-1 hover:-translate-x-1;
+}
+
+.neo-btn {
+  @apply inline-flex items-center justify-center border-4 border-manga-black dark:border-[#F5E6A8] font-manga tracking-wider text-xl uppercase px-6 py-2 shadow-neo dark:shadow-neo-white transition-all duration-200 hover:shadow-neo-hover dark:hover:shadow-neo-white hover:-translate-y-1 hover:-translate-x-1 active:translate-y-0 active:translate-x-0 active:shadow-none;
+}
+
+.neo-tag {
+  @apply border-4 border-manga-black dark:border-[#F5E6A8] px-3 py-1 font-manga tracking-wider text-sm uppercase shadow-neo-sm dark:shadow-neo-white;
 }

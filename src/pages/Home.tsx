@@ -58,8 +58,8 @@ export const Home = () => {
     return (
       <div className="flex items-center justify-center h-[calc(100vh-4rem)]">
         <div className="animate-pulse flex flex-col items-center">
-          <div className="w-16 h-16 border-4 border-pink-500 border-t-transparent rounded-full animate-spin"></div>
-          <p className="mt-4 text-pink-500 font-medium">Loading...</p>
+          <div className="w-16 h-16 neo-border border-t-manga-yellow rounded-full animate-spin"></div>
+          <p className="mt-4 text-manga-black dark:text-manga-white font-manga tracking-widest text-2xl uppercase">Loading...</p>
         </div>
       </div>
     );
@@ -68,16 +68,16 @@ export const Home = () => {
   const latestVideo = videos[currentIndex];
 
   return (
-    <div className="flex flex-col gap-16 pb-16">
+    <div className="flex flex-col gap-24 pb-24">
       {/* Hero Section */}
-      <section className="relative h-[80vh] flex items-center overflow-hidden">
-        <div className="absolute inset-0 z-0 flex">
-          {randomizedProfiles.map((p) => (
-             <div key={p.id} className="w-1/4 h-full relative overflow-hidden group/hero">
+      <section className="relative h-[85vh] flex items-center justify-center overflow-hidden bg-manga-yellow dark:bg-[#141922] neo-border mx-4 sm:mx-6 lg:mx-8 mt-4 shadow-neo dark:shadow-[10px_10px_0_#F5E6A8]">
+        <div className="absolute inset-0 z-0 grid grid-cols-2 md:grid-cols-4 gap-1 p-1 bg-manga-black dark:bg-[#F5E6A8]">
+          {randomizedProfiles.map((p, i) => (
+             <div key={p.id} className={`w-full h-full relative overflow-hidden group/hero bg-manga-white dark:bg-[#222] ${i % 2 === 0 ? 'bg-manga-blue' : 'bg-manga-red'}`}>
                <img
                  src={p.avatar_url || 'https://images.unsplash.com/photo-1613310023042-ad79bb239d29?auto=format&fit=crop&q=80&w=2000'}
                  alt={p.name}
-                 className="w-full h-full object-cover opacity-70 group-hover/hero:opacity-100 group-hover/hero:scale-110 transition-all duration-700 ease-out grayscale-[20%] group-hover/hero:grayscale-0"
+                 className="w-full h-full object-cover mix-blend-luminosity opacity-80 group-hover/hero:mix-blend-normal group-hover/hero:opacity-100 group-hover/hero:scale-110 transition-all duration-500 ease-out"
                />
                <Link 
                  to={`/profile/${p.id}`}
@@ -86,31 +86,35 @@ export const Home = () => {
                />
              </div>
           ))}
-          <div className="absolute inset-0 bg-gradient-to-b from-zinc-950/20 via-zinc-950/50 to-zinc-950/80 pointer-events-none"></div>
         </div>
         
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-          <div className="max-w-3xl">
-            <h1 className="text-5xl md:text-7xl font-extrabold text-white mb-4">
-              Welcome to <span className="text-pink-500">GPS</span>
+        {/* Comic style starburst or solid block for text */}
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full text-center">
+          <div className="neo-card !bg-manga-white/55 dark:!bg-[#111827]/70 dark:!border-[#F5E6A8] backdrop-blur-md backdrop-saturate-150 max-w-4xl mx-auto flex flex-col items-center justify-center p-12 -rotate-2 hover:rotate-0 dark:shadow-[8px_8px_0_#4A90E2]">
+            <span className="text-3xl md:text-5xl font-manga text-manga-red mb-2 tracking-widest drop-shadow-[2px_2px_0_#111] dark:drop-shadow-[2px_2px_0_#F4C430]">
+              WELCOME TO
+            </span>
+            <h1 className="text-6xl md:text-9xl font-manga text-manga-black dark:text-[#FFF8E7] mb-6 tracking-tight leading-none drop-shadow-[4px_4px_0_#F4C430] dark:drop-shadow-[4px_4px_0_#4A90E2]">
+              GEPENG PUNYA SOVENIR!
             </h1>
-            <p className="text-xl md:text-2xl text-zinc-300 mb-8 max-w-2xl">
+            <div className="w-full h-2 bg-manga-black dark:bg-[#F5E6A8] mb-8"></div>
+            <p className="text-lg md:text-2xl text-manga-black dark:text-[#E8EDF5] mb-10 max-w-2xl font-bold uppercase tracking-wide">
               We are GPS (Gepeng Punya Sovenir) a virtual youtuber group consisting of 7 amazing members! Let's make some amazing memories together.
             </p>
-            <div className="flex flex-wrap gap-4">
+            <div className="flex flex-wrap justify-center gap-6">
               <Link
                 to="/profile"
-                className="inline-flex items-center px-6 py-3 rounded-full bg-pink-500 hover:bg-pink-600 text-white font-medium transition-all hover:scale-105"
+                className="neo-btn bg-manga-blue text-manga-white hover:bg-manga-yellow hover:text-manga-black dark:hover:bg-[#F4C430] dark:hover:text-manga-black"
               >
-                <Users className="w-5 h-5 mr-2" />
-                Meet The Members
+                <Users className="w-6 h-6 mr-3" strokeWidth={2.5} />
+                MEET THE MEMBERS
               </Link>
               <Link
                 to="/merchandise"
-                className="inline-flex items-center px-6 py-3 rounded-full bg-zinc-800 hover:bg-zinc-700 text-white font-medium transition-all hover:scale-105 border border-zinc-700"
+                className="neo-btn bg-manga-red text-manga-white hover:bg-manga-yellow hover:text-manga-black dark:hover:bg-[#F4C430] dark:hover:text-manga-black"
               >
-                <ShoppingBag className="w-5 h-5 mr-2" />
-                Shop Merch
+                <ShoppingBag className="w-6 h-6 mr-3" strokeWidth={2.5} />
+                SHOP MERCH
               </Link>
             </div>
           </div>
@@ -119,18 +123,21 @@ export const Home = () => {
 
       {highlightMerch.length > 0 && (
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-          <div className="flex items-center justify-between mb-8">
-            <h2 className="text-3xl font-bold">Our <span className="text-pink-500">Merchandise</span></h2>
+          <div className="flex flex-col md:flex-row items-center justify-between mb-12 border-b-4 border-manga-black dark:border-manga-white pb-6">
+            <div>
+              <span className="neo-tag bg-manga-blue text-manga-white mb-2 inline-block">EXCLUSIVE</span>
+              <h2 className="text-4xl md:text-5xl font-manga text-manga-black dark:text-manga-white drop-shadow-[2px_2px_0_#F4C430] dark:drop-shadow-[2px_2px_0_#4A90E2]">OUR MERCHANDISE</h2>
+            </div>
             <Link
               to="/merchandise"
-              className="inline-flex items-center px-4 py-2 rounded-full bg-zinc-800 hover:bg-zinc-700 text-white font-medium transition-colors border border-zinc-700"
+              className="neo-btn bg-manga-yellow text-manga-black dark:text-manga-black mt-4 md:mt-0"
             >
-              <ShoppingBag className="w-4 h-4 mr-2" />
-              Lihat semua
+              <ShoppingBag className="w-5 h-5 mr-2" strokeWidth={2.5} />
+              VIEW ALL
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {highlightMerch.map((item) => {
               const vtuber = profiles.find((p) => p.id === item.vtuber_id);
               const imageUrl =
@@ -140,29 +147,29 @@ export const Home = () => {
               return (
                 <div
                   key={item.id}
-                  className="bg-zinc-900 rounded-2xl overflow-hidden border border-zinc-800 hover:border-pink-500/50 transition-colors flex flex-col"
+                  className="neo-card flex flex-col"
                 >
-                  <div className="aspect-square overflow-hidden bg-zinc-950">
+                  <div className="aspect-square overflow-hidden border-b-4 border-manga-black dark:border-manga-white relative bg-manga-yellow">
                     <img
                       src={imageUrl}
                       alt={item.name}
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
                       loading="lazy"
                     />
                   </div>
 
-                  <div className="p-5 flex flex-col flex-grow">
-                    <div className="text-white font-bold line-clamp-1" title={item.name}>
+                  <div className="p-6 flex flex-col flex-grow bg-manga-white dark:bg-[#222]">
+                    <div className="text-manga-black dark:text-manga-white font-bold text-xl uppercase tracking-tight line-clamp-2 mb-2" title={item.name}>
                       {item.name}
                     </div>
                     {vtuber && (
-                      <div className="mt-2 text-xs text-zinc-400 line-clamp-1" title={vtuber.name}>
-                        {vtuber.name}
+                      <div className="text-sm font-bold text-manga-red dark:text-manga-yellow uppercase tracking-wider mb-4" title={vtuber.name}>
+                        BY {vtuber.name}
                       </div>
                     )}
 
-                    <div className="mt-auto pt-4 flex items-center justify-between border-t border-zinc-800/50">
-                      <div className="text-lg font-extrabold text-white">
+                    <div className="mt-auto pt-4 flex flex-col gap-4 border-t-4 border-manga-black dark:border-manga-white border-dashed">
+                      <div className="text-2xl font-manga tracking-wider text-manga-black dark:text-manga-white">
                         Rp {item.price.toLocaleString('id-ID')}
                       </div>
                       {item.order_url ? (
@@ -170,20 +177,20 @@ export const Home = () => {
                           href={item.order_url}
                           target="_blank"
                           rel="noreferrer"
-                          className={`px-3 py-2 rounded-xl text-sm font-medium transition-colors ${
+                          className={`neo-btn w-full ${
                             item.is_available
-                              ? 'bg-pink-500 hover:bg-pink-600 text-white'
-                              : 'bg-zinc-800 text-zinc-500 pointer-events-none'
+                              ? 'bg-manga-blue text-manga-white hover:bg-manga-yellow hover:text-manga-black dark:hover:text-manga-black'
+                              : 'bg-manga-gray text-manga-black opacity-50 pointer-events-none'
                           }`}
                         >
-                          Order
+                          BUY NOW
                         </a>
                       ) : (
                         <Link
                           to="/merchandise"
-                          className="px-3 py-2 rounded-xl text-sm font-medium bg-zinc-800 hover:bg-zinc-700 text-white transition-colors"
+                          className="neo-btn w-full bg-manga-white dark:bg-[#222] text-manga-black dark:text-manga-white hover:bg-manga-yellow dark:hover:bg-manga-yellow dark:hover:text-manga-black"
                         >
-                          Detail
+                          DETAILS
                         </Link>
                       )}
                     </div>
@@ -198,51 +205,61 @@ export const Home = () => {
       {/* Latest Video Section */}
       {latestVideo && (
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-          <div className="flex items-center justify-between mb-8">
-            <h2 className="text-3xl font-bold">Latest <span className="text-pink-500">Video</span></h2>
+          <div className="flex flex-col md:flex-row items-center justify-between mb-12 border-b-4 border-manga-black dark:border-manga-white pb-6">
+            <div>
+              <span className="neo-tag bg-manga-red text-manga-white mb-2 inline-block">NEW RELEASE</span>
+              <h2 className="text-4xl md:text-5xl font-manga text-manga-black dark:text-manga-white drop-shadow-[2px_2px_0_#4A90E2] dark:drop-shadow-[2px_2px_0_#EF476F]">LATEST VIDEO</h2>
+            </div>
           </div>
           
-          <div className="relative group rounded-2xl overflow-hidden aspect-video bg-zinc-950 border border-zinc-800 shadow-2xl">
-            <img
-              src={getYoutubeThumbnailUrl(latestVideo.video_url) || latestVideo.thumbnail_url}
-              alt={latestVideo.title}
-              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 opacity-80 group-hover:opacity-100"
-              onError={(e) => {
-                const youtubeThumb = getYoutubeThumbnailUrl(latestVideo.video_url);
-                if (youtubeThumb && e.currentTarget.src.includes('maxresdefault.jpg')) {
-                  e.currentTarget.src = e.currentTarget.src.replace('maxresdefault.jpg', 'hqdefault.jpg');
-                }
-              }}
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-transparent to-transparent opacity-80"></div>
-            <div className="absolute bottom-0 left-0 p-8">
-              <h3 className="text-2xl font-bold text-white mb-2">{latestVideo.title}</h3>
-              <p className="text-zinc-300">{new Date(latestVideo.published_at).toLocaleDateString()} • {latestVideo.views.toLocaleString()} views</p>
-            </div>
-            <a
-              href={latestVideo.video_url}
-              target="_blank"
-              rel="noreferrer"
-              className="absolute inset-0 flex items-center justify-center"
-            >
-              <div className="w-20 h-20 bg-pink-500/90 rounded-full flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity transform group-hover:scale-110 duration-300">
-                <Play className="w-8 h-8 ml-1" />
+          <div className="neo-card p-2 bg-manga-black dark:bg-[#F5E6A8] relative group aspect-video">
+            <div className="relative w-full h-full border-4 border-manga-white dark:border-manga-black overflow-hidden bg-manga-yellow">
+              <img
+                src={getYoutubeThumbnailUrl(latestVideo.video_url) || latestVideo.thumbnail_url}
+                alt={latestVideo.title}
+                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 opacity-90 group-hover:opacity-100 mix-blend-luminosity group-hover:mix-blend-normal"
+                onError={(e) => {
+                  const youtubeThumb = getYoutubeThumbnailUrl(latestVideo.video_url);
+                  if (youtubeThumb && e.currentTarget.src.includes('maxresdefault.jpg')) {
+                    e.currentTarget.src = e.currentTarget.src.replace('maxresdefault.jpg', 'hqdefault.jpg');
+                  }
+                }}
+              />
+              {/* Comic halftone overlay */}
+              <div className="absolute inset-0 opacity-20 pointer-events-none" style={{
+                backgroundImage: 'radial-gradient(#111 2px, transparent 2px)',
+                backgroundSize: '8px 8px'
+              }}></div>
+              
+              <div className="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-manga-black to-transparent border-t-4 border-manga-black dark:border-manga-white mt-auto translate-y-2 group-hover:translate-y-0 transition-transform">
+                <h3 className="text-2xl md:text-4xl font-manga text-manga-white mb-2 tracking-wide uppercase drop-shadow-[2px_2px_0_#111]">{latestVideo.title}</h3>
+                <p className="text-manga-yellow font-bold uppercase tracking-widest text-sm drop-shadow-[1px_1px_0_#111]">{new Date(latestVideo.published_at).toLocaleDateString()} • {latestVideo.views.toLocaleString()} VIEWS</p>
               </div>
-            </a>
-            <button
-              aria-label="Previous video"
-              onClick={() => setCurrentIndex((i) => (i - 1 + videos.length) % videos.length)}
-              className="absolute left-4 top-1/2 -translate-y-1/2 bg-zinc-900/70 hover:bg-zinc-800 text-white p-2 rounded-full border border-zinc-700"
-            >
-              <ChevronLeft className="w-5 h-5" />
-            </button>
-            <button
-              aria-label="Next video"
-              onClick={() => setCurrentIndex((i) => (i + 1) % videos.length)}
-              className="absolute right-4 top-1/2 -translate-y-1/2 bg-zinc-900/70 hover:bg-zinc-800 text-white p-2 rounded-full border border-zinc-700"
-            >
-              <ChevronRight className="w-5 h-5" />
-            </button>
+              <a
+                href={latestVideo.video_url}
+                target="_blank"
+                rel="noreferrer"
+                className="absolute inset-0 flex items-center justify-center z-10"
+              >
+                <div className="w-24 h-24 neo-border bg-manga-red rounded-full flex items-center justify-center text-manga-white opacity-0 group-hover:opacity-100 transition-all transform group-hover:scale-110 shadow-neo dark:shadow-neo-white hover:bg-manga-yellow hover:text-manga-black">
+                  <Play className="w-10 h-10 ml-2" strokeWidth={2.5} />
+                </div>
+              </a>
+              <button
+                aria-label="Previous video"
+                onClick={() => setCurrentIndex((i) => (i - 1 + videos.length) % videos.length)}
+                className="absolute left-4 top-1/2 -translate-y-1/2 neo-btn bg-manga-white dark:bg-[#F5E6A8] text-manga-black p-3 hover:bg-manga-yellow z-20"
+              >
+                <ChevronLeft className="w-8 h-8" strokeWidth={3} />
+              </button>
+              <button
+                aria-label="Next video"
+                onClick={() => setCurrentIndex((i) => (i + 1) % videos.length)}
+                className="absolute right-4 top-1/2 -translate-y-1/2 neo-btn bg-manga-white dark:bg-[#F5E6A8] text-manga-black p-3 hover:bg-manga-yellow z-20"
+              >
+                <ChevronRight className="w-8 h-8" strokeWidth={3} />
+              </button>
+            </div>
           </div>
         </section>
       )}
